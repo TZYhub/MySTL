@@ -47,10 +47,17 @@ public:
 	int Search(T e, int lo, int hi);
 	int Unique();//有序向量去重操作
 
-	void binSearch(T e, int lo, int hi);
+	int binSearch(T *a, T e, int lo, int hi);
+	void fibSearch(T *a, T e, int lo, int hi);
+
+
+	void BubbleSort(T *a, int lo, int hi);
+	void MergeSort(T *a, int lo, int hi);
 
 protected:
 	void CopyFrom(T const *A, int lo, int hi);//拷贝，构造函数中使用
+	int bubble(T *a, int lo, int hi);
+	void Merge(T *a, int lo, int mi, int hi);
 	void Expend();//扩容
 private:
 	T* _elem;
@@ -212,5 +219,113 @@ int MyVector<T>::Unique()
 	_size = ++i;
 	return j - i;
 }
+
+
+template <typename T>
+int MyVector<T>::binSearch(T *a, T e, int lo, int hi)
+{
+	while (lo < hi)
+	{
+		int mi = (lo + hi) >> 1;
+		(e < a[mi]) ? hi = mi : lo = mi + 1;
+	}
+	return --lo;
+}
+
+
+class Fib
+{
+	Fib get();
+};
+
+
+//////////!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+template <typename T>
+void MyVector<T>::fibSearch(T *a, T e, int lo, int hi)
+{
+	Fib fib(hi - lo);
+	
+}
+//////////!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+template <typename T>
+void MyVector<T>::BubbleSort(T *a, int lo, int hi)
+{
+	while(lo < (hi = bubble(a, lo, hi)));
+}
+
+template <typename T>
+int MyVector<T>::bubble(T *a, int lo, int hi)
+{
+	////最普通的一种
+	//while(++lo < hi)
+	//{
+	//	if (a[lo - 1] < a[lo])
+	//	{
+	//		swap(a[lo - 1], a[lo]);
+	//	}
+	//}
+	////第二版
+	//bool flag = true;
+	//while (++lo < hi)
+	//{
+	//	if (a[lo - 1] < a[lo])
+	//	{
+	//		flag = false;
+	//		swap(a[lo - 1], a[lo]);
+	//	}
+	//}
+	//return false;
+	//第三版
+	int last = lo;
+	while(++lo < hi)
+	{
+		if (a[lo - 1] < a[lo])
+		{
+			last = lo;
+			swap(a[lo - 1], a[lo]);
+		}
+	}
+	return lo;
+}
+
+
+
+template <typename T>
+void MyVector<T>::MergeSort(T *a, int lo, int hi)//a 也可以理解为_elem数组
+{
+	if (hi - lo < 2)
+	{
+		return;
+	}
+	int mi = (hi - lo) >> 1;
+	MergeSort(a, lo, mi);
+	MergeSort(a, mi, hi);
+	Merge(a, lo, mi, hi);
+
+}
+
+template <typename T>
+void MyVector<T>::Merge(T *a, int lo, int mi, int hi)
+{
+	int lb = mi - lo;
+	T *B = new T[lb];
+	for(int i = 0; i < lb; B[i++] = a[lo++]);
+	int lc = hi - mi;
+	T *C = a + mi;
+	for (int i = j = k = 0; (j < lb) || (k < lc))
+	{
+		if ((j < lb)&&(lc <= k || B[j] <= C[k]))
+		{
+			a[i++] = B[++];
+		}
+		if ((k < lc)&&(lb <= j || C[k] < B[j]))
+		{
+			a[i++] = C[k++];
+		}
+	}
+	delete []B;
+}
+
 
 #endif
